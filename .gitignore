@@ -1,0 +1,16 @@
+# Non public datasets
+private_datasets/
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Docker
+*.log
+
+# macOS
+.DS_Store
+EOF
