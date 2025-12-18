@@ -1,0 +1,23 @@
+# Pin the constraining packages
+pycaret==3.3.2
+tensorflow==2.18.0
+gplearn==0.4.2
+
+# Jupyter
+jupyter==1.1.1
+jupyterlab==4.3.4
+
+# Let pip resolve these based on version constraints
+numpy
+pandas
+scikit-learn
+scipy
+matplotlib
+seaborn
+plotly
+xgboost
+lightgbm
+catboost
+imbalanced-learn
+shap
+optuna

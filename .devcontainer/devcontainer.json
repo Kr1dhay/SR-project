@@ -1,0 +1,35 @@
+{
+  "name": "ML Healthcare",
+  "build": {
+    "dockerfile": "../dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  
+  // Forward Jupyter port
+  "forwardPorts": [8888],
+  
+  // VS Code extensions to install in the container
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-keymap",
+        "ms-toolsai.jupyter-renderers"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/venv/bin/python",
+        "python.terminal.activateEnvironment": true
+      }
+    }
+  },
+  
+  // Run commands after container is created
+  "postCreateCommand": "pip list",
+  
+  // Keep container running
+  "overrideCommand": true,
+}

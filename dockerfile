@@ -1,31 +1,36 @@
-FROM debian:12
+# Start with official PyTorch image (which is based on debian:12)
+FROM pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
 
-# Avoid interactive prompts
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install system packages
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    python3-venv \
-    git \
-    openssh-client \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Pipenv
-RUN pip3 install --no-cache-dir pipenv
 
 WORKDIR /workspace
 
-# Copy dependency files first for better caching
-COPY Pipfile Pipfile.lock /workspace/
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install dependencies *system-wide* (NO virtualenv inside container)
-RUN pipenv install --system --deploy
+# Install system dependencies including git (important for dev containers)
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    build-essential \
+    python3-venv \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the rest of your project
-COPY . /workspace/
+# Create virtual environment
+RUN python -m venv /opt/venv
 
-EXPOSE 8889
+# Activate venv and upgrade pip
+RUN /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools wheel
 
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8889", "--no-browser", "--ServerApp.allow_root=True"]
+# Copy requirements file
+COPY requirements.txt .
+
+# Install packages in venv
+RUN /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+# Environment variables
+ENV PATH="/opt/venv/bin:$PATH"
+ENV VIRTUAL_ENV="/opt/venv"
+ENV PYTHONUNBUFFERED=1
+
+EXPOSE 8888
+
+CMD ["/bin/bash"]
