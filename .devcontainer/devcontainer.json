@@ -31,5 +31,5 @@
   "postCreateCommand": "pip list",
   
   // Keep container running
-  "overrideCommand": true,
+  "overrideCommand": true
 }
